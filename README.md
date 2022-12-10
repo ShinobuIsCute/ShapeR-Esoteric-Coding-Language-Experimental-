@@ -61,12 +61,11 @@ d  input
 - Downwards facing triangle indicates next 'x' lines of code for relational operations where x is the number of lines of the triangle.
 
 ## If..else Statements
-- We will use a semicircle facing left to indicate that there is an if statement for the next 'x' lines of code where x is the radius of the semicircle squared.
-(Maybe make this half a hexagon instead, and implement circles later?)
+- We will use a half-hexagon facing left to indicate that there is an if statement for the next 'x' lines of code where x is the radius of the half-hexagon squared.
+- Size must be minimum 5(height).
 
 ## Loops
-- We will use a semicircle facing right to indicate that there is a for loop or while loop for the next 'x' lines of code where x is the radius of the semicircle squared.
-(Implement the other half of a hexagon? so If else is a left sided hexagon, and loops are a right sided hexagon)
+- We will use a half-hexagon facing right to indicate that there is a for loop or while loop for the next 'x' lines of code where x is the radius of the half-hexagon squared.
 
 ## Functions
 - A rhombus will be used to indicate that there is a function definition in the next 'x' lines of code where x is the area of the rhombus.
