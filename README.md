@@ -62,9 +62,11 @@ d  input
 
 ## If..else Statements
 - We will use a semicircle facing left to indicate that there is an if statement for the next 'x' lines of code where x is the radius of the semicircle squared.
+(Maybe make this half a hexagon instead, and implement circles later?)
 
 ## Loops
 - We will use a semicircle facing right to indicate that there is a for loop or while loop for the next 'x' lines of code where x is the radius of the semicircle squared.
+(Implement the other half of a hexagon? so If else is a left sided hexagon, and loops are a right sided hexagon)
 
 ## Functions
 - A rhombus will be used to indicate that there is a function definition in the next 'x' lines of code where x is the area of the rhombus.
@@ -77,4 +79,15 @@ Example:
  ~
 function_name
 ```
-Test Changer
+Pros:
+- Simple enough to start with
+- Similar enough to translate directly to C or Assembly
+Cons:
+- Shapes not a prevelant element of the programming language
+- Regular lines of code extend from shapes
+
+## If we have time later:
+- Integrate regular code into shapes
+- Shapes determine how code is interpreted by compiler
+- Sequences of shapes for advanced functionality? (maybe not)
+- Find a way to detect a circle
