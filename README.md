@@ -82,6 +82,7 @@ function_name
 Pros:
 - Simple enough to start with
 - Similar enough to translate directly to C or Assembly
+
 Cons:
 - Shapes not a prevelant element of the programming language
 - Regular lines of code extend from shapes
