@@ -27,9 +27,10 @@ int main() {
                 counter++;
         }
         string ShapeArray[counter]; //Counter = number of lines in program
+        originalFile.close();
         originalFile.open(fileName);
         counter = 0; //Will use counter as ShapeArray indices
-
+        
         while(!originalFile.eof()) { //Shape Array is initialized after this
                 getline(originalFile, ShapeArray[counter]);
                 counter++;
@@ -37,7 +38,9 @@ int main() {
 
         counter = -1; //Now, counter will be used for the compiler itself.
 
-        int ShapeOrder[10];
+        originalFile.close();
+
+        int ShapeOrder[10]; //Placeholder ShapeOrder array here
 
         //Manager function here
         for(int index = 0; index < sizeof(ShapeOrder); index++) {
@@ -57,6 +60,9 @@ int main() {
                         case 6:
                                 break;
                         case 7:
+                                break;
+                        default:
+                                cout << "What?";
                 }
         }
 
