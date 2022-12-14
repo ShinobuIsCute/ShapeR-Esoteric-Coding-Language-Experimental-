@@ -37,7 +37,28 @@ int main() {
 
         counter = -1; //Now, counter will be used for the compiler itself.
 
-        
+        int ShapeOrder[10];
+
+        //Manager function here
+        for(int index = 0; index < sizeof(ShapeOrder); index++) {
+                switch(ShapeOrder[index]) {
+                        case 0:
+                                break;
+                        case 1:
+                                break;
+                        case 2:
+                                break;
+                        case 3:
+                                break;
+                        case 4:
+                                break;
+                        case 5:
+                                break;
+                        case 6:
+                                break;
+                        case 7:
+                }
+        }
 
         return 0;
 }
