@@ -45,9 +45,9 @@ int main() {
         //Manager function here
         for(int index = 0; index < sizeof(ShapeOrder); index++) {
                 switch(ShapeOrder[index]) {
-                        case 0:
+                        case 0: //Square / rectangle
                                 break;
-                        case 1:
+                        case 1: //triangle in clockwise order
                                 break;
                         case 2:
                                 break;
@@ -55,14 +55,16 @@ int main() {
                                 break;
                         case 4:
                                 break;
-                        case 5:
+                        case 5: // two trapeziums, up and down
                                 break;
-                        case 6:
+                        case 6: // 
                                 break;
-                        case 7:
+                        case 7: // Rhombus
+                                break;
+                        case 8: // Special rhombus
                                 break;
                         default:
-                                cout << "What?";
+                                cout << "What?\n";
                 }
         }
 
