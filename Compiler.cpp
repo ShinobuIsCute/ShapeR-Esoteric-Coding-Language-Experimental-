@@ -2,6 +2,8 @@
 #include <fstream>
 #include <string>
 #include <cstdlib>
+#include <cstring>
+//1,3,5,6 to do now
 
 using namespace std; // Just makes it so you don't need std::
 
@@ -12,10 +14,12 @@ int check_rhombus(string* text, int start);
 int main() {
         int counter = 0; //Will first use to count amount of lines in input file
         int num_char_in_file = 0;
+        int numRows;
         string fileName; //Take filename from terminal, can make it so it's just a set string if needed
+        string tempLine; //temporarily stores lines of the txt file
         string redacted; //Just used to make the line counter work
-        cout << "Enter Filename:";
-        cin >> fileName;
+        cout << "Enter Filename: Test.txt\n";
+        fileName = "Test.txt";
 
         ifstream originalFile; // I think ifstream is for reading, and ofstream is for writing
         originalFile.open(fileName); // Original File is the input
@@ -32,16 +36,24 @@ int main() {
                 getline(originalFile, redacted); //just uses a random String variable to make this work
                 ++counter;
         }
-        char** ShapeArray = (char**) malloc(num_char_in_file * sizeof(char)); //Counter = number of lines in program
-        int* array_to_return = (int*) malloc(sizeof(int));
-        originalFile.close();
-        originalFile.open(fileName);
-        counter = 0; //Will use counter as ShapeArray indices
+        numRows = counter;
         
-        while(!originalFile.eof()) { //Shape Array is initialized after this
-                //getline(originalFile, ShapeArray[counter]);
-                ++counter;
+        string* ShapeArray = (string*) malloc((numRows) * sizeof(string)); //Counter = number of lines in program
+        originalFile.close(); //reset the file pointer.
+        originalFile.open(fileName);
+        counter = 0; //Re-using counter as an index for ShapeArray here
+        
+        while(!originalFile.eof()) { 
+                getline(originalFile, tempLine, '\n'); //Store the line
+                ShapeArray[counter] = tempLine;
+                counter++;
         }
+        
+        for(int row = 0; row < numRows; row++) { //print out the Shape Array.
+                cout << ShapeArray[row];
+                printf("\n");
+        }
+        cin >> redacted;// Pause to see output
 
         counter = -1; //Now, counter will be used for the compiler itself.
 
@@ -54,17 +66,17 @@ int main() {
                 switch(ShapeOrder[index]) {
                         case 0: //Square / rectangle
                                 break;
-                        case 1: //triangle in clockwise order
+                        case 1: //up 
                                 break;
-                        case 2:
+                        case 2: //right/output
                                 break;
-                        case 3:
+                        case 3: //down relational operations me
                                 break;
-                        case 4:
+                        case 4: //left input me
                                 break;
-                        case 5: // two trapeziums, up and down
+                        case 5: // up if statements
                                 break;
-                        case 6: // 
+                        case 6: // down, loops
                                 break;
                         case 7: // Rhombus
                                 break;
@@ -74,9 +86,15 @@ int main() {
                                 cout << "What?\n";
                 }
         }
+        
 
+        //End of the program, only release resources after this point.
+        free(ShapeArray);
+        compiled.close();
         return 0;
 }
+
+
 
 int count_char_in_line(string line) {
         int char_counter = sizeof(line);
