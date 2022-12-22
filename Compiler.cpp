@@ -14,7 +14,7 @@ int check_rhombus(string* text, int start);
 int main() {
         int counter = 0; //Will first use to count amount of lines in input file
         int num_char_in_file = 0;
-        int numRows;
+        int numRows; // Amount of rows in ShapeArray
         string fileName; //Take filename from terminal, can make it so it's just a set string if needed
         string tempLine; //temporarily stores lines of the txt file
         string redacted; //Just used to make the line counter work
@@ -37,15 +37,14 @@ int main() {
                 ++counter;
         }
         numRows = counter;
-        
-        string* ShapeArray = (string*) malloc((numRows) * sizeof(string)); //Counter = number of lines in program
+        string* ShapeArray = static_cast<string*>( malloc((numRows) * sizeof(string))); //Counter = number of lines in program
         originalFile.close(); //reset the file pointer.
         originalFile.open(fileName);
         counter = 0; //Re-using counter as an index for ShapeArray here
         
-        while(!originalFile.eof()) { 
-                getline(originalFile, tempLine, '\n'); //Store the line
-                ShapeArray[counter] = tempLine;
+        while(!originalFile.eof()) { //Store the line
+                getline(originalFile, tempLine, '\n');
+                new (ShapeArray + counter) string(tempLine);
                 counter++;
         }
         
@@ -89,6 +88,9 @@ int main() {
         
 
         //End of the program, only release resources after this point.
+        for (int i = 0; i < 10; i++) {
+                (ShapeArray + i)->~string();  // Call the string destructor to clean up the element
+        }
         free(ShapeArray);
         compiled.close();
         return 0;
