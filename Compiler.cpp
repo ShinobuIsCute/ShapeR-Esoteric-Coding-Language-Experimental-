@@ -42,6 +42,7 @@ int main() {
         originalFile.open(fileName);
         counter = 0; //Re-using counter as an index for ShapeArray here
         
+        
         while(!originalFile.eof()) { //Store the line
                 getline(originalFile, tempLine, '\n');
                 new (ShapeArray + counter) string(tempLine);
@@ -49,7 +50,7 @@ int main() {
         }
         
         for(int row = 0; row < numRows; row++) { //print out the Shape Array.
-                cout << ShapeArray[row];
+                cout << ShapeArray[row] << " " << lineLength(ShapeArray[row]);
                 printf("\n");
         }
         cin >> redacted;// Pause to see output
@@ -61,7 +62,7 @@ int main() {
         int* ShapeOrder = shape_finder(ShapeArray); //Placeholder ShapeOrder array here
 
         //Manager function here
-        for(int index = 0; index < sizeof(ShapeOrder); index++) {
+        for(int index = 0; index < sizeof(ShapeOrder) / sizeof(int); index++) {
                 switch(ShapeOrder[index]) {
                         case 0: //Square / rectangle
                                 break;
@@ -88,7 +89,7 @@ int main() {
         
 
         //End of the program, only release resources after this point.
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < numRows; i++) {
                 (ShapeArray + i)->~string();  // Call the string destructor to clean up the element
         }
         free(ShapeArray);
@@ -96,7 +97,9 @@ int main() {
         return 0;
 }
 
-
+int lineLength(string line){
+        return line.length();
+}
 
 int count_char_in_line(string line) {
         int char_counter = sizeof(line);
