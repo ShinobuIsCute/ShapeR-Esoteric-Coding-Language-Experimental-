@@ -15,17 +15,20 @@ int main() {
         int counter = 0; //Will first use to count amount of lines in input file
         int num_char_in_file = 0;
         int numRows;
+        int numCols;
         string fileName; //Take filename from terminal, can make it so it's just a set string if needed
         string tempLine; //temporarily stores lines of the txt file
         string redacted; //Just used to make the line counter work
         cout << "Enter Filename: Test.txt\n";
-        fileName = "Test.txt";
-
+        //fileName = "Test.txt";
+        cin >> fileName;
+        cout << fileName;
+        
         ifstream originalFile; // I think ifstream is for reading, and ofstream is for writing
         originalFile.open(fileName); // Original File is the input
         ofstream compiled; // Converted program will be written here
         compiled.open("Compiled.txt"); // File output
-
+        
         if(originalFile.fail()) {
                 cout << "Error! Check your spelling.";
                 cin >> fileName;
@@ -42,13 +45,13 @@ int main() {
         originalFile.close(); //reset the file pointer.
         originalFile.open(fileName);
         counter = 0; //Re-using counter as an index for ShapeArray here
-        
+        printf("Hello there!");
         while(!originalFile.eof()) { 
                 getline(originalFile, tempLine, '\n'); //Store the line
                 ShapeArray[counter] = tempLine;
                 counter++;
         }
-        
+        printf("OOOOOOOOOOOOOOOOOGA BOOOGA");
         for(int row = 0; row < numRows; row++) { //print out the Shape Array.
                 cout << ShapeArray[row];
                 printf("\n");
@@ -58,11 +61,12 @@ int main() {
         counter = -1; //Now, counter will be used for the compiler itself.
 
         originalFile.close();
-
+        printf("Before ShapeOrder");
         int* ShapeOrder = shape_finder(ShapeArray); //Placeholder ShapeOrder array here
 
         //Manager function here
         for(int index = 0; index < sizeof(ShapeOrder); index++) {
+                cout << ShapeOrder[index];
                 switch(ShapeOrder[index]) {
                         case 0: //Square / rectangle
                                 break;
@@ -89,8 +93,11 @@ int main() {
         
 
         //End of the program, only release resources after this point.
+        printf("HELLO");
         free(ShapeArray);
+        free(ShapeOrder);
         compiled.close();
+        // tested cin >> numCols;
         return 0;
 }
 
@@ -132,7 +139,7 @@ int* shape_finder(string* text) {
         int i = 0;
         int array_size = 0;
         int* array_to_return = (int*) malloc(sizeof(int));
-        
+        int* tmp;
 
         while (text[i] != "\u001a") {
                 
@@ -143,14 +150,17 @@ int* shape_finder(string* text) {
                 } else {
                         while (count_char_in_line(text[i]) != 0) {
                                 ++i;
-                        }
+                        } //fix??
                 }
                  
                 if (count_char_in_line(text[i]) == 1) {
                         if (check_rhombus(text, i) == 1) {
                                 //place 7 in array and then continue the loop
                                 ++array_size;
-                                (int*) realloc((int*) array_to_return, sizeof(int)*(array_size+1));
+                                tmp = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size+1));
+                                if (tmp == NULL) {
+                                        perror("realloc failed");
+                                }
                                 array_to_return[array_size] = 7;
                                 continue;
                         }
@@ -163,20 +173,29 @@ int* shape_finder(string* text) {
                         if (count_char_in_line(text[j]) != 1) {
                                 // place 1 in array and then continue the loop
                                 ++array_size;
-                                (int*) realloc((int*) array_to_return, sizeof(int)*(array_size+1));
+                                tmp = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size+1));
+                                if (tmp == NULL) {
+                                        perror("realloc failed");
+                                }
                                 array_to_return[array_size] = 1;
                                 continue;
                         }
                         if (text[j][0] == ' ') {
                                 // place 4 in array and then continue loop
                                 ++array_size;
-                                (int*) realloc((int*) array_to_return, sizeof(int)*(array_size+1));
+                                tmp = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size+1));
+                                if (tmp == NULL) {
+                                        perror("realloc failed");
+                                }
                                 array_to_return[array_size] = 4;
                                 continue;
                         } else {
                                 // place 2 in array and then continue loop 
                                 ++array_size;
-                                (int*) realloc((int*) array_to_return, sizeof(int)*(array_size+1));
+                                tmp = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size+1));
+                                if (tmp == NULL) {
+                                        perror("realloc failed");
+                                }
                                 array_to_return[array_size] = 2;
                                 continue;
                         }
@@ -189,25 +208,37 @@ int* shape_finder(string* text) {
                         if (count_char_in_line(text[j]) == 1) {
                                 // place 3 in array and then continnue loop
                                 ++array_size;
-                                (int*) realloc((int*) array_to_return, sizeof(int)*(array_size+1));
+                                tmp = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size+1));
+                                if (tmp == NULL) {
+                                        perror("realloc failed");
+                                }
                                 array_to_return[array_size] = 3;
                                 continue;
                         } else if (count_char_in_line(text[i]) == count_char_in_line(text[j])) {
                                 // place 0 in array and then continue loop
                                 ++array_size;
-                                (int*) realloc((int*) array_to_return, sizeof(int)*(array_size+1));
+                                tmp = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size+1));
+                                if (tmp == NULL) {
+                                        perror("realloc failed");
+                                }
                                 array_to_return[array_size] = 0;
                                 continue;
                         } else if (count_char_in_line(text[i]) < count_char_in_line(text[j])) {
                                 // place 5 in array and then continue loop
                                 ++array_size;
-                                (int*) realloc((int*) array_to_return, sizeof(int)*(array_size+1));
+                                tmp = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size+1));
+                                if (tmp == NULL) {
+                                        perror("realloc failed");
+                                }
                                 array_to_return[array_size] = 5;
                                 continue;
                         } else if (count_char_in_line(text[i]) > count_char_in_line(text[j])) {
                                 // place 6 in array and then continue loop
                                 ++array_size;
-                                (int*) realloc((int*) array_to_return, sizeof(int)*(array_size+1));
+                                tmp = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size+1));
+                                if (tmp == NULL) {
+                                        perror("realloc failed");
+                                }
                                 array_to_return[array_size] = 6;
                                 continue;
                         }
