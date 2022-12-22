@@ -58,7 +58,7 @@ int main() {
 
         originalFile.close();
 
-        int ShapeOrder[10]; //Placeholder ShapeOrder array here
+        int* ShapeOrder = shape_finder(ShapeArray); //Placeholder ShapeOrder array here
 
         //Manager function here
         for(int index = 0; index < sizeof(ShapeOrder); index++) {
