@@ -4,6 +4,7 @@
         "fstream": "cpp",
         "iosfwd": "cpp",
         "C_Cpp.errorSquiggles": "Enabled",
-        "string": "cpp"
+        "string": "cpp",
+        "xstring": "cpp"
     }
 }
