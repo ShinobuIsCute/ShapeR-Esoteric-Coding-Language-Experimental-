@@ -42,24 +42,20 @@ int main() {
         string* ShapeArray = static_cast<string*>( malloc((numRows) * sizeof(string))); //Counter = number of lines in program
         originalFile.close(); //reset the file pointer.
         originalFile.open(fileName);
+
         counter = 0; //Re-using counter as an index for ShapeArray here
-        
-        
         while(!originalFile.eof()) { //Store the line
                 getline(originalFile, tempLine, '\n');
+                cout << tempLine << "\n";
                 new (ShapeArray + counter) string(tempLine);
-        }
-        printf("Hello there!");
-        while(!originalFile.eof()) { 
-                getline(originalFile, tempLine, '\n'); //Store the line
-                ShapeArray[counter] = tempLine;
                 counter++;
         }
-        printf("OOOOOOOOOOOOOOOOOGA BOOOGA");
+        
         for(int row = 0; row < numRows; row++) { //print out the Shape Array.
-                cout << ShapeArray[row] << " " << lineLength(ShapeArray[row]);
+                cout << ShapeArray[row];
                 printf("\n");
         }
+        printf("Hello there!\n");
         //cin >> redacted;// Pause to see output
 
         counter = -1; //Now, counter will be used for the compiler itself.
@@ -107,10 +103,6 @@ int main() {
         compiled.close();
         // tested cin >> numCols;
         return 0;
-}
-
-int lineLength(string line){
-        return line.length();
 }
 
 int count_char_in_line(string line) {
