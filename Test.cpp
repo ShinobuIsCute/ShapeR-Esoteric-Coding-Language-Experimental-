@@ -17,13 +17,17 @@ int main() {
     //getline(cin, aisot[1], '\n');
     //getline(cin, aisot[2], '\n');
     string arr[33] = {"d 31234", "s Hello", "~ ~~~~~", " ", "  ~", " ~~", "~~~", " ~~", "  ~", " ", "~", "~~", "~~~", "~~", "~", " ", "  ~", " ~~~", "~~~~~", " ", "~~~~~", " ~~~", "  ~", " ", " ~~~", "~~~~~", " ", "~~~~~", " ~~~", " ", " ~ ", "~~~", " ~ "};
-    string t = "Hello.";
+    //string t = "Hello.";
     //int answer = count_char_in_line(t);
     int* answer = shape_finder(arr, 33);
     
-    size_t n = sizeof(answer)/sizeof(int);
+    //size_t n = sizeof(answer)/sizeof(int);
  
     // loop through the array elements
+    for (int k = 0; k < 33; k++) {
+        cout << arr[k] << '\n';
+    }
+
     for (int i = 0; i < 9; i++) {
         cout << answer[i] << ' ';
     }

@@ -48,6 +48,7 @@ int main() {
         while(!originalFile.eof()) { //Store the line
                 getline(originalFile, tempLine, '\n');
                 new (ShapeArray + counter) string(tempLine);
+                counter++;
         }
         printf("Hello there!");
         printf("%d\n WHAT", numRows);
@@ -61,9 +62,15 @@ int main() {
 
         originalFile.close();
         printf("Before ShapeOrder");
-        int* ShapeOrder = shape_finder(ShapeArray, numRows); //Placeholder ShapeOrder array here
+
+        for (int k = 0; k < numRows; k++) {
+        cout << ShapeArray[k] << '\n';
+        }
+
+        int* ShapeOrder = shape_finder(ShapeArray, 33); //Placeholder ShapeOrder array here
 
         //Manager function here
+        printf("After ShapeOrder");
         for(int index = 0; index < sizeof(ShapeOrder); index++) {
                 printf("%d", ShapeOrder[index]);
                 switch(ShapeOrder[index]) {
@@ -98,8 +105,8 @@ int main() {
         }
         
         printf("HELLO");
-        free(ShapeArray);
-        free(ShapeOrder);
+        //free(ShapeArray);
+        //free(ShapeOrder);
         compiled.close();
         // tested cin >> numCols;
         return 0;
@@ -109,7 +116,7 @@ int main() {
 
 int count_char_in_line(string line) {
         int char_counter = line.length();
-        for (int i = 0; i < line.length(); ++i) {
+        for (int i = 0; i < line.length(); i++) {
                 if ((line[i] == ' ') || line[i] == '\0') {
                         char_counter = char_counter - 1;
                 }
