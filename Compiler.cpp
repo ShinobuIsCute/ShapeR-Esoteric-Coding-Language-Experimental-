@@ -3,11 +3,12 @@
 #include <string>
 #include <cstdlib>
 #include <cstring>
+#include <conio.h>
 //1,3,5,6 to do now
 
 using namespace std; // Just makes it so you don't need std::
 
-int* shape_finder(string* text);
+int* shape_finder(string* text, int num_lines);
 int count_char_in_line(string line);
 int check_rhombus(string* text, int start);
 
@@ -55,6 +56,7 @@ int main() {
                 cout << ShapeArray[row];
                 printf("\n");
         }
+        //int x = getch();
         printf("Hello there!\n");
         //cin >> redacted;// Pause to see output
 
@@ -62,7 +64,7 @@ int main() {
 
         originalFile.close();
         //printf("Before ShapeOrder");
-        int* ShapeOrder = shape_finder(ShapeArray); //Placeholder ShapeOrder array here
+        int* ShapeOrder = shape_finder(ShapeArray, numRows); //Placeholder ShapeOrder array here
 
         //Manager function here
         for(int index = 0; index < sizeof(ShapeOrder) / sizeof(int); index++) {
@@ -107,7 +109,7 @@ int main() {
 
 int count_char_in_line(string line) {
         int char_counter = line.length();
-        for (int i = 0; i < line.length(); ++i) {
+        for (int i = 0; i < line.length(); i++) {
                 if ((line[i] == ' ') || line[i] == '\0') {
                         char_counter = char_counter - 1;
                 }
@@ -116,135 +118,149 @@ int count_char_in_line(string line) {
 }
 
 int check_rhombus(string* text, int start) {
-        int i, j = 0;
-        int checker = 1;
-        if (text[0][0] == ' ') {
+        int i = 0;
+        int j = 0;
+        
+        if (text[start][0] != ' ') {
                 return 0;
         }
         while (count_char_in_line(text[start+j]) != 0) {
                 ++j;
         }
         --j;
-        while (i != j) {
-                if (sizeof(text[start+i]) == sizeof(text[start+j])) {
-                        continue;
+
+        int x = j/2;
+        
+        int m = count_char_in_line(text[start+i+1]);
+        int n = count_char_in_line(text[start+i]);
+        int test = m - n;
+        if (test % 2 == 1) {
+                return 0;
+        }
+        i++;
+
+        if (i == x) {
+                if (((text[start] == " ~ ") && (text[start+2] == " ~ ")) && (text[start+1] == "~~~")) {
+                        return 2;
                 } else {
-                        checker = 0;
-                        break;
+                        return 0;
                 }
         }
-        return checker;
+
+        for(i; i < x; i++) {
+                m = count_char_in_line(text[start+i+1]);
+                n = count_char_in_line(text[start+i]);
+                int checker = m - n;
+                if (test != checker) {
+                        return 0;
+                }
+        }
+
+        for(i; i < j; i++) {
+                m = count_char_in_line(text[start+i+1]);
+                n = count_char_in_line(text[start+i]);
+                int checker = m - n;
+                if (test != (checker - 2 * checker)) {
+                        return 0;
+                }
+        }
+
+        return 1;
 }
 
-int* shape_finder(string* text) {
+int* shape_finder(string* text, int num_lines) {
 
-        int i = 0;
-        int array_size = 0;
+        int i = -1;
+        int j;
+        int array_size = 1;
         int* array_to_return = (int*) malloc(sizeof(int));
-        int* tmp;
+        
+        while ((i+1) < num_lines) {
+                // i represents first line in shape, j represents the last line.
+                i++; // go to next line
+                while (count_char_in_line(text[i]) == 0) {
+                        i++; // go to next line with a character in it
+                } 
 
-        while (text[i] != "\u001a") {
+                j = i; // let j be equal to i
                 
-                if (i == 0) {
-                        if (count_char_in_line(text[i]) == 0) {
-                        ++i;
-                        }
-                } else {
-                        while (count_char_in_line(text[i]) != 0) {
-                                ++i;
-                        } //fix??
+                while (count_char_in_line(text[j]) != 0) {
+                        j++; 
                 }
-                 
-                if (count_char_in_line(text[i]) == 1) {
-                        if (check_rhombus(text, i) == 1) {
+                j--; // j is now equal to the last line in the shape
+                if (count_char_in_line(text[i]) == 1) { // if first line in shape has only 1 character
+                        if (check_rhombus(text, i) == 1) { // shape is a normal rhombus
                                 //place 7 in array and then continue the loop
-                                ++array_size;
-                                tmp = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size+1));
-                                if (tmp == NULL) {
-                                        perror("realloc failed");
-                                }
-                                array_to_return[array_size] = 7;
+                                array_to_return = (int*) realloc((int*) array_to_return, sizeof(int)*array_size);
+                                array_to_return[array_size-1] = 7;
+                                array_size += 1;
+                                i = j;
                                 continue;
-                        }
-                
-                        int j = i;
-                        while (count_char_in_line(text[j]) != 0) {
-                                ++j;
-                        }
-                        --j;
-                        if (count_char_in_line(text[j]) != 1) {
+                        } else if (check_rhombus(text, i) == 2) { // shape is a special rhombus
+                                //place 8 in array and then continue the loop
+                                array_to_return = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size));
+                                array_to_return[array_size-1] = 8;
+                                array_size += 1;
+                                i = j;
+                                continue;
+                        } else if (count_char_in_line(text[j]) != 1) { // shape is upwards facing triangle
                                 // place 1 in array and then continue the loop
-                                ++array_size;
-                                tmp = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size+1));
-                                if (tmp == NULL) {
-                                        perror("realloc failed");
-                                }
-                                array_to_return[array_size] = 1;
+                                
+                                array_to_return = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size));
+                                array_to_return[array_size-1] = 1;
+                                array_size += 1;
+                                i = j;
                                 continue;
-                        }
-                        if (text[j][0] == ' ') {
+                        } else if (text[j][0] == ' ') { // shape is a left facing triangle
                                 // place 4 in array and then continue loop
-                                ++array_size;
-                                tmp = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size+1));
-                                if (tmp == NULL) {
-                                        perror("realloc failed");
-                                }
-                                array_to_return[array_size] = 4;
+                                array_to_return = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size));
+                                array_to_return[array_size-1] = 4;
+                                array_size += 1;
+                                i = j;
                                 continue;
-                        } else {
-                                // place 2 in array and then continue loop 
-                                ++array_size;
-                                tmp = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size+1));
-                                if (tmp == NULL) {
-                                        perror("realloc failed");
-                                }
-                                array_to_return[array_size] = 2;
+                        } else { // shape is a right facing triangle
+                                // place 2 in array and then continue loop                                         
+                                array_to_return = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size));
+                                array_to_return[array_size-1] = 2;
+                                array_size += 1;
+                                i = j;
                                 continue;
                         }
                 } else {
-                        int j = i;
-                        while (count_char_in_line(text[j]) != 0) {
-                                ++j;
-                        }
-                        --j;
-                        if (count_char_in_line(text[j]) == 1) {
-                                // place 3 in array and then continnue loop
-                                ++array_size;
-                                tmp = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size+1));
-                                if (tmp == NULL) {
-                                        perror("realloc failed");
-                                }
-                                array_to_return[array_size] = 3;
+                        if (count_char_in_line(text[j]) == 1) { // shape is a downwards facing triangle
+                                // place 3 in array and then continue loop
+                                
+                                array_to_return = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size));
+                                array_to_return[array_size-1] = 3;
+                                array_size += 1;
+                                i = j;
                                 continue;
-                        } else if (count_char_in_line(text[i]) == count_char_in_line(text[j])) {
+                        } else if (count_char_in_line(text[i]) == count_char_in_line(text[j])) { // shape is a rectangle
                                 // place 0 in array and then continue loop
-                                ++array_size;
-                                tmp = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size+1));
-                                if (tmp == NULL) {
-                                        perror("realloc failed");
-                                }
-                                array_to_return[array_size] = 0;
+                                
+                                array_to_return = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size));
+                                array_to_return[array_size-1] = 0;
+                                array_size += 1;
+                                i = j;
                                 continue;
-                        } else if (count_char_in_line(text[i]) < count_char_in_line(text[j])) {
+                        } else if (count_char_in_line(text[i]) < count_char_in_line(text[j])) { // shape is a upwards facing trapezium
                                 // place 5 in array and then continue loop
-                                ++array_size;
-                                tmp = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size+1));
-                                if (tmp == NULL) {
-                                        perror("realloc failed");
-                                }
-                                array_to_return[array_size] = 5;
+                                
+                                array_to_return = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size));
+                                array_to_return[array_size-1] = 5;
+                                array_size += 1;
+                                i = j;
                                 continue;
-                        } else if (count_char_in_line(text[i]) > count_char_in_line(text[j])) {
+                        } else if (count_char_in_line(text[i]) > count_char_in_line(text[j])) { // shape is a downwards facing trapezium
                                 // place 6 in array and then continue loop
-                                ++array_size;
-                                tmp = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size+1));
-                                if (tmp == NULL) {
-                                        perror("realloc failed");
-                                }
-                                array_to_return[array_size] = 6;
+                                
+                                array_to_return = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size));
+                                array_to_return[array_size-1] = 6;
+                                array_size += 1;
+                                i = j;
                                 continue;
                         }
                 }
         }
-        return array_to_return;
+        return array_to_return; // return array 
 }
