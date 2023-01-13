@@ -11,6 +11,10 @@ int resizeOrder(int* iref, int* jref, int* shapeOrder, int orderSize, int shapeI
 void shape_finder(string* text, int* shapeOrder, int num_lines);
 int count_char_in_line(string line);
 int check_rhombus(string* text, int start);
+int upTriangle(string* text, int start); //check down for documentation
+int downTriangle(string* text, int start);
+int topHexagon(string* text, int start);
+int bottomHexagon(string* text, int start);
 
 int main() {
         int counter = 0; //Will first use to count amount of lines in input file
@@ -69,12 +73,9 @@ int main() {
         }
         printf("gay");
         shape_finder(ShapeArray, ShapeOrder, /*orderSize,*/ numRows); //Placeholder ShapeOrder array here
-
-        cout << "Order Size: " << /**orderSize <<*/ "\n";
-
-
         //for(int i = 0; i < )
 
+        int shapeArrayIndex = 0;
         //Manager function here
         for(int index = 0; index < 100; index++) {
                 cout << ShapeOrder[index] << "\n";
@@ -82,6 +83,7 @@ int main() {
                         case 9: //Square / rectangle
                                 break;
                         case 1: //up 
+                                shapeArrayIndex = upTriangle(ShapeArray, shapeArrayIndex);
                                 break;
                         case 2: //right/output
                                 break;
@@ -242,9 +244,9 @@ void shape_finder(string* text, int* shapeOrder, /*int *orderSize,*/ int num_lin
         }
 }
 
-int resizeOrder(int* iref, int* jref, int* shapeOrder, int orderSize, int shapeID, bool skipLine) {
+int resizeOrder(int* iref, int* jref, int* shapeOrder, int orderSize, int shapeID, bool skipLine) { //Helper function
         int i = *iref;
-        int j = *jref;
+        int j = *jref; // store values from pointers as integers
         cout << "OrderSize : " << orderSize << "\n";
         shapeOrder[orderSize] = shapeID;
         cout << "ShapeID : " << shapeID << "\n";
@@ -255,7 +257,22 @@ int resizeOrder(int* iref, int* jref, int* shapeOrder, int orderSize, int shapeI
         } else {
                 i = j + 2;
         }
-        *iref = i;
+        *iref = i; //return updated values using pointers.
         *jref = j;
         return orderSize;
 }
+
+int skipShape(string* text, int start) {
+        
+}
+
+// All functions return the updated index start.
+
+int upTriangle(string* text, int start) { //writes upTriangle code into file
+
+}
+
+
+int downTriangle(string* text, int start);
+int topHexagon(string* text, int start);
+int bottomHexagon(string* text, int start);
