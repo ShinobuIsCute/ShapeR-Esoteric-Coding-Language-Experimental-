@@ -262,14 +262,21 @@ int resizeOrder(int* iref, int* jref, int* shapeOrder, int orderSize, int shapeI
         return orderSize;
 }
 
-int skipShape(string* text, int start) {
-        
+int skipShape(string* text, int start, int* height) {
+        while(count_char_in_line(text[start]) == 0) { //Skips to the next empty line.
+                start++;
+                *height++;
+        }
+        start++; //adds to start one more time so it passes the empty line.
+        return start;
 }
 
 // All functions return the updated index start.
 
 int upTriangle(string* text, int start) { //writes upTriangle code into file
-
+        int* height = 0;
+        start = skipShape(text, start, height);
+        
 }
 
 
