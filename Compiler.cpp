@@ -10,7 +10,7 @@ using namespace std; // Just makes it so you don't need std::
 
 int* shape_finder(string* text, int num_lines);
 int count_char_in_line(string line);
-int check_rhombus(string* text, int start);
+int check_rhombus(string* text, int start, int num_lines);
 
 int main() {
         int counter = 0; //Will first use to count amount of lines in input file
@@ -43,32 +43,36 @@ int main() {
         string* ShapeArray = static_cast<string*>( malloc((numRows) * sizeof(string))); //Counter = number of lines in program
         originalFile.close(); //reset the file pointer.
         originalFile.open(fileName);
-
         counter = 0; //Re-using counter as an index for ShapeArray here
+        
         while(!originalFile.eof()) { //Store the line
                 getline(originalFile, tempLine, '\n');
-                cout << tempLine << "\n";
                 new (ShapeArray + counter) string(tempLine);
                 counter++;
         }
-        
+        printf("Hello there!");
+        printf("%d\n WHAT", numRows);
         for(int row = 0; row < numRows; row++) { //print out the Shape Array.
                 cout << ShapeArray[row];
                 printf("\n");
         }
-        //int x = getch();
-        printf("Hello there!\n");
-        //cin >> redacted;// Pause to see output
-
+        cin >> redacted;// Pause to see output
+        printf("please work.");  
         counter = -1; //Now, counter will be used for the compiler itself.
 
         originalFile.close();
-        //printf("Before ShapeOrder");
-        int* ShapeOrder = shape_finder(ShapeArray, numRows); //Placeholder ShapeOrder array here
+        printf("Before ShapeOrder");
+
+        for (int k = 0; k < numRows; k++) {
+        cout << ShapeArray[k] << '\n';
+        }
+
+        int* ShapeOrder = shape_finder(ShapeArray, 33); //Placeholder ShapeOrder array here
 
         //Manager function here
-        for(int index = 0; index < sizeof(ShapeOrder) / sizeof(int); index++) {
-                cout << ShapeOrder[index];
+        printf("After ShapeOrder");
+        for(int index = 0; index < sizeof(ShapeOrder); index++) {
+                printf("%d", ShapeOrder[index]);
                 switch(ShapeOrder[index]) {
                         case 0: //Square / rectangle
                                 break;
@@ -95,17 +99,20 @@ int main() {
         
 
         //End of the program, only release resources after this point.
-        for (int i = 0; i < numRows; i++) {
+        int getch;
+        for (int i = 0; i < 10; i++) {
                 (ShapeArray + i)->~string();  // Call the string destructor to clean up the element
         }
         
         printf("HELLO");
-        free(ShapeArray);
-        free(ShapeOrder);
+        //free(ShapeArray);
+        //free(ShapeOrder);
         compiled.close();
         // tested cin >> numCols;
         return 0;
 }
+
+
 
 int count_char_in_line(string line) {
         int char_counter = line.length();
@@ -117,17 +124,19 @@ int count_char_in_line(string line) {
         return char_counter;
 }
 
-int check_rhombus(string* text, int start) {
+int check_rhombus(string* text, int start, int num_lines) {
         int i = 0;
         int j = 0;
         
         if (text[start][0] != ' ') {
                 return 0;
         }
-        while (count_char_in_line(text[start+j]) != 0) {
+        while ((count_char_in_line(text[start+j]) != 0) && ((start+j) < num_lines - 1)) {
                 ++j;
         }
-        --j;
+        if (count_char_in_line(text[start+j]) == 0) {
+                j--; // j is now equal to the last line in the shape
+        }
 
         int x = j/2;
         
@@ -178,29 +187,34 @@ int* shape_finder(string* text, int num_lines) {
         while ((i+1) < num_lines) {
                 // i represents first line in shape, j represents the last line.
                 i++; // go to next line
-                while (count_char_in_line(text[i]) == 0) {
+                while ((count_char_in_line(text[i]) == 0) && (i < num_lines - 1)) {
                         i++; // go to next line with a character in it
                 } 
 
                 j = i; // let j be equal to i
                 
-                while (count_char_in_line(text[j]) != 0) {
+                while ((count_char_in_line(text[j]) != 0) && (j < num_lines - 1)) {
                         j++; 
                 }
-                j--; // j is now equal to the last line in the shape
+                if (count_char_in_line(text[j]) == 0) {
+                        j--; // j is now equal to the last line in the shape
+                }
+                
                 if (count_char_in_line(text[i]) == 1) { // if first line in shape has only 1 character
-                        if (check_rhombus(text, i) == 1) { // shape is a normal rhombus
+                        if (check_rhombus(text, i, num_lines) == 1) { // shape is a normal rhombus
                                 //place 7 in array and then continue the loop
                                 array_to_return = (int*) realloc((int*) array_to_return, sizeof(int)*array_size);
                                 array_to_return[array_size-1] = 7;
                                 array_size += 1;
+                                // 2j - i + 3
                                 i = j;
                                 continue;
-                        } else if (check_rhombus(text, i) == 2) { // shape is a special rhombus
+                        } else if (check_rhombus(text, i, num_lines) == 2) { // shape is a special rhombus
                                 //place 8 in array and then continue the loop
                                 array_to_return = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size));
                                 array_to_return[array_size-1] = 8;
                                 array_size += 1;
+                                // 2j - i + 3
                                 i = j;
                                 continue;
                         } else if (count_char_in_line(text[j]) != 1) { // shape is upwards facing triangle
@@ -209,6 +223,7 @@ int* shape_finder(string* text, int num_lines) {
                                 array_to_return = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size));
                                 array_to_return[array_size-1] = 1;
                                 array_size += 1;
+                                // 2j - i + 3
                                 i = j;
                                 continue;
                         } else if (text[j][0] == ' ') { // shape is a left facing triangle
@@ -216,6 +231,7 @@ int* shape_finder(string* text, int num_lines) {
                                 array_to_return = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size));
                                 array_to_return[array_size-1] = 4;
                                 array_size += 1;
+                                // 2j - i + 3
                                 i = j;
                                 continue;
                         } else { // shape is a right facing triangle
@@ -223,6 +239,7 @@ int* shape_finder(string* text, int num_lines) {
                                 array_to_return = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size));
                                 array_to_return[array_size-1] = 2;
                                 array_size += 1;
+                                // 2j - i + 3
                                 i = j;
                                 continue;
                         }
@@ -233,6 +250,7 @@ int* shape_finder(string* text, int num_lines) {
                                 array_to_return = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size));
                                 array_to_return[array_size-1] = 3;
                                 array_size += 1;
+                                // 2j - i + 3
                                 i = j;
                                 continue;
                         } else if (count_char_in_line(text[i]) == count_char_in_line(text[j])) { // shape is a rectangle
@@ -249,6 +267,7 @@ int* shape_finder(string* text, int num_lines) {
                                 array_to_return = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size));
                                 array_to_return[array_size-1] = 5;
                                 array_size += 1;
+                                // 2j - i + 3
                                 i = j;
                                 continue;
                         } else if (count_char_in_line(text[i]) > count_char_in_line(text[j])) { // shape is a downwards facing trapezium
@@ -257,6 +276,7 @@ int* shape_finder(string* text, int num_lines) {
                                 array_to_return = (int*) realloc((int*) array_to_return, sizeof(int)*(array_size));
                                 array_to_return[array_size-1] = 6;
                                 array_size += 1;
+                                // 2j - i + 3
                                 i = j;
                                 continue;
                         }
