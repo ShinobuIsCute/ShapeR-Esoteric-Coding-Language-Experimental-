@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <conio.h>
+#include <sstream>
 //1,3,5,6 to do now
 
 using namespace std; // Just makes it so you don't need std::
@@ -62,7 +63,9 @@ int main() {
         }
         cin >> redacted;// Pause to see output
         printf("please work.");  
-        counter = -1; //Now, counter will be used for the compiler itself.
+        
+        int counters[] = {-1, -1, -1, -1, -1, -1, -1, -1, -1 , -1};
+        int depth = -1; //will use as index for counters, and to tell at what {} depth we are at.
 
         originalFile.close();
         printf("Before ShapeOrder");
@@ -182,7 +185,7 @@ int check_rhombus(string* text, int start, int num_lines) {
 
         return 1;
 }
-
+// WARNING, DO NOT CHANGE, LEST YOU WANT TO TORTURE YOURSELF
 int* shape_finder(string* text, int num_lines) {
 
         int i = -1;
@@ -291,24 +294,148 @@ int* shape_finder(string* text, int num_lines) {
         return array_to_return; // return array 
 }
 
-int skipShape(string* text, int start, int* height) {
-        while(count_char_in_line(text[start]) == 0) { //Skips to the next empty line.
-                start++;
-                *height++;
+void updateCounter(int* counter, int* depth, int height, int modifier) {
+        if(*depth < 0) {
+                return;
         }
-        start++; //adds to start one more time so it passes the empty line.
-        return start;
+
+        counter[*depth] = counter[*depth] - ((height + 1) * modifier);
+
+        if(counter[*depth] <= 0) {
+                *depth = *depth - 1;
+        }
+        return;
 }
+
+string stringClip(string text) {
+        int index = 0;
+        int max = text.size();
+        if(text[0] == '~') {
+                do {
+                        index++;
+                } while(text[index] == '~');
+                return text.substr(index, text.size() - 1 - index);
+        } else {
+                do {
+                        index++;
+                } while(text[index] != '~');
+                return text.substr(0, index + 1);
+        }
+}
+
+int skipShape(string* text, int* start) {
+        int height = 0;
+        while(count_char_in_line(text[*start]) == 0) { //Skips to the next empty line.
+                
+                *start = *start + 1;
+                height = height + 1;
+        }
+        *start = *start + 1; //adds to start one more time so it passes the empty line.
+        return height;
+}
+
+int getHeight(string* text, int start) { // gets the height without updating start, only useful for rectangle, which we have to read AND get the height of.
+        int height = 0;
+        height = skipShape(text, &start);
+        return height;
+}
+
+
+/* WARNING, DO NOT UNCOMMENT, LEST YOU WANT TO TORTURE YOURSELF
+void checkNewLine(string* text, int *index, int* length, int* start, int height) {
+        if(*index >= *length) {
+                *start = *start + 1;
+                *index = 0;
+                *length = text[*start].length();
+                
+        }
+}
+
+void skipSpace(string* text, int* start, int* index, int* length, int height){
+        while(text[*start][*index] == ' ') {
+                        *index = *index + 1;
+                        checkNewLine(text, index, length, start, height);
+                        if(*start >= height){
+                                break;
+                        }
+                }
+}
+
+string getVariableName(string* text, int* start, int* index, int* length, int height) {
+        string name = "";
+        while(text[*start][*index] != ' ' || text[*start][*index] != '~') {
+                name.push_back(text[*start][*index]);
+                        *index = *index + 1;
+                        if(index >= length) {
+                                *start = *start + 1;
+                                index = 0;
+                                if(*start >= height){
+                                        break;
+                                }
+                        }
+                }
+        return name;
+}*/
 
 // All functions return the updated index start.
-
-int upTriangle(string* text, int start) { //writes upTriangle code into file
-        int* height = 0;
-        start = skipShape(text, start, height);
+// Counter is an array of integers, and we also pass the address of depth to all functions
+int rectangle(string* text, int start, int* counter, int* depth, ofstream Compiled) { 
+        int height = getHeight(text, start);
+        int maxLine = start + height;
         
+        while(start <= maxLine) {
+                string inputs[3];
+                std::stringstream line(text[start]);
+                for(int i = 0; i < 3; i++) { //get three inputs from a single line. Ignore the rest.
+                        getline(line, inputs[i], ' ');
+                }
+                inputs[0] = stringClip(inputs[0]); //get rid of any '~'
+                inputs[2] = stringClip(inputs[2]);
+
+                if(inputs[0][0] == 'd') {
+                        Compiled << "int " << inputs[1] << " " << inputs[2] << endl;
+                } else if (inputs[0][0] == 's'){
+                        Compiled << "string " << inputs[1] << " \"" << inputs[2] << "\"" << endl;
+                } else {
+                        Compiled << "bool " << inputs[1] << " " << inputs[2] << endl;
+                }
+                
+                start++;
+        }
+
+        updateCounter(counter, depth, height, 1);
+        start++;
+        return start;
+}
+int upTriangle(string* text, int start, int* counter, int* depth, ofstream Compiled) { //writes upTriangle code into file
+        int height = getHeight(text, start);
+        int maxline = start + height;
+
+        for(start; start <= maxline; start++) {
+                Compiled << text[start] << endl;
+        }
+
+        updateCounter(counter, depth, height, 2);
 }
 
 
-int downTriangle(string* text, int start);
-int topHexagon(string* text, int start);
-int bottomHexagon(string* text, int start);
+int downTriangle(string* text, int start, int* counter, int* depth, ofstream Compiled) {
+        return upTriangle(text, start, counter, depth, Compiled);
+}
+int topHexagon(string* text, int start, int* counter, int* depth, ofstream Compiled) { //if statements
+        int height = skipShape(text, &start);
+        Compiled << "if(" << text[start] << ") {" << endl;
+        *depth = *depth + 1;
+        counter[*depth] = height;
+        skipShape(text, &start);
+        return start;
+
+}
+int bottomHexagon(string* text, int start, int* counter, int* depth, ofstream Compiled) {//loops
+        int height = skipShape(text, &start);
+        Compiled << "while(" << text[start] << ") {" << endl;
+        *depth = *depth + 1;
+        counter[*depth] = height;
+        skipShape(text, &start);
+        return start;
+}
